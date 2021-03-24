@@ -172,6 +172,8 @@ let preQuestions =
         }];
 
 let next = document.querySelector('.next');
+let previous = document.querySelector('.previous');
+let idx = document.querySelector('#index');
 
 let question = document.querySelector('.question');
 let answers = document.querySelectorAll('.list-group-item');
@@ -193,12 +195,73 @@ function doAction(event) {
         markCorrect(event.target);
     }
     else {
-        markInCorrect(event.target);
+        markCorrect(event.target);
     }
     disableAnswers();
 }
 
+function setQuestion(index) {
+    //clearClass();
+    question.innerHTML = preQuestions[index].question;
 
+    answers[0].innerHTML = preQuestions[index].answers[0];
+    answers[1].innerHTML = preQuestions[index].answers[1];
+    answers[2].innerHTML = preQuestions[index].answers[2];
+    answers[3].innerHTML = preQuestions[index].answers[3];
+
+    if (preQuestions[index].answers.length === 2) {
+        answers[2].style.display = 'none';
+        answers[3].style.display = 'none';
+    } else {
+        answers[2].style.display = 'block';
+        answers[3].style.display = 'block';
+    }
+}
+
+function activateAnswers() {
+    for (let i = 0; i < answers.length; i++) {
+        answers[i].addEventListener('click', doAction);
+    }
+}
+activateAnswers();
+
+function disableAnswers() {
+    for (let i = 0; i < answers.length; i++) {
+        answers[i].removeEventListener('click', doAction);
+    }
+}
+
+
+function markCorrect(elem) {
+    elem.classList.add('correct');
+}
+
+
+next.addEventListener('click', function () {
+    index++;
+    if (index >= preQuestions.length) {
+        list.style.display = 'none';
+        results.style.display = 'block';
+        userScorePoint.innerHTML = points;
+    } else {
+        setQuestion(index);
+        activateAnswers();
+        idx.innerHTML=index;
+    }
+});
+
+previous.addEventListener('click', function () {
+    index--;
+    if (index >= preQuestions.length) {
+        list.style.display = 'none';
+        results.style.display = 'block';
+        userScorePoint.innerHTML = points;
+    } else {
+        setQuestion(index);
+        activateAnswers();
+        idx.innerHTML=index;
+    }
+})
 
 restart.addEventListener('click', function (event) {
     event.preventDefault();
