@@ -186,6 +186,7 @@ let points = 0;
 for (let i = 0; i < answers.length; i++) {
     answers[i].addEventListener('click', doAction);
 }
+activateAnswers();
 
 function doAction(event) {
     //event.target - Zwraca referencję do elementu, do którego zdarzenie zostało pierwotnie wysłane.
@@ -195,7 +196,7 @@ function doAction(event) {
         markCorrect(event.target);
     }
     else {
-        markCorrect(event.target);
+        markInCorrect(event.target);
     }
     disableAnswers();
 }
@@ -222,6 +223,7 @@ function activateAnswers() {
     for (let i = 0; i < answers.length; i++) {
         answers[i].addEventListener('click', doAction);
     }
+    removeMark();
 }
 activateAnswers();
 
@@ -235,11 +237,23 @@ function disableAnswers() {
 function markCorrect(elem) {
     elem.classList.add('correct');
 }
+function markInCorrect(elem) {
+    elem.classList.add('incorrect');
+}
+
+function removeMark() {
+    for(let i=0; i<answers.length; i++){
+        answers[i].classList.remove('correct');
+        answers[i].classList.remove('incorrect');
+    }
+}
 
 
 next.addEventListener('click', function () {
     index++;
-    if (index >= preQuestions.length) {
+    let indexLastElement = preQuestions.length-1;
+
+    if (index >= indexLastElement+1) {
         list.style.display = 'none';
         results.style.display = 'block';
         userScorePoint.innerHTML = points;
@@ -252,20 +266,12 @@ next.addEventListener('click', function () {
 
 previous.addEventListener('click', function () {
     index--;
-    if (index >= preQuestions.length) {
-        list.style.display = 'none';
-        results.style.display = 'block';
-        userScorePoint.innerHTML = points;
-    } else {
-        setQuestion(index);
-        activateAnswers();
-        idx.innerHTML=index;
-    }
+    setQuestion(index);
+    idx.innerHTML=index;
 })
 
 restart.addEventListener('click', function (event) {
     event.preventDefault();
-
     index = 0;
     points = 0;
     let userScorePoint = document.querySelector('.score');
